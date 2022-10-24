@@ -55,8 +55,33 @@ model = Network(in_features=in_features, out_features=out_features)
 # define criterion and optimizer
 lr = 0.01
 criterion = nn.MSELoss()
-optimizer = optim.SGD(model.parameters(), lr=lr)
+optimizer = optim.Adam(model.parameters(), lr=lr)
 
 # training loop
 n_iters = 100
+L = []
 
+for epoch in range(n_iters):
+    # forward pass
+    pred = model(X_train)
+
+    # compute loss function
+    loss = criterion(pred, y_train)
+    L.append(loss.item())
+
+    # compute the gradient
+    loss.backward()
+
+    # update weights
+    optimizer.step()
+
+    # zero grad
+    optimizer.zero_grad()
+
+    if epoch % 10 == 0:
+        print(f"epoch = {epoch}/{n_iters} loss={loss}")
+
+
+
+plt.plot(range(n_iters), L)
+plt.show()
