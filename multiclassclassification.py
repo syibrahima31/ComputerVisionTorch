@@ -103,5 +103,30 @@ for epoch in range(n_epochs):
 
 
 ################ evaluation du modéle ############
+with torch.no_grad():
+    n_correct = 0
+    n_sample = 0
+    for data, target in dataloader_test:
+        target = torch.max(target, 1)[1]
+        pred = model(data.float())
+        _, pred_traget = torch.max(pred, 1)
+        n_correct += (target==pred_traget).sum()
+        n_sample += len(data)
+    print( f"Accuracy du jeu de test est: {n_correct/n_sample}")
+
+with torch.no_grad():
+    n_correct = 0
+    n_sample = 0
+    for data, target in dataloader_train:
+        target = torch.max(target, 1)[1]
+        pred = model(data.float())
+        _, pred_traget = torch.max(pred, 1)
+        n_correct += (target==pred_traget).sum()
+        n_sample += len(data)
+    print( f"Accuracy du jeu de train  est: {n_correct/n_sample}")
+
+
+
+
 
 
