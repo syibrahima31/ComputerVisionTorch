@@ -1,6 +1,6 @@
 import torch
 import matplotlib.pyplot as plt
-from torchvision.datasets import MNIST
+from torchvision.datasets import MNIST, FashionMNIST
 from torchvision.transforms import transforms
 
 download = False
@@ -23,7 +23,6 @@ for i, image in enumerate(data):
     plt.subplot(10, 10, i + 1)
     # plt.imshow(image, cmap='gray')
     plt.axis("off")
-
 
 # plt.show()
 
@@ -70,5 +69,19 @@ for epoch in range(n_epochs):
         # zero grad
         optimizer.zero_grad()
 
-        if epoch % 10 ==0:
-            print(f"epoch={epoch+1}/{n_epochs} step ={i}/{n_itteration} loss = {loss.item()}")
+        if epoch % 10 == 0:
+            print(f"epoch={epoch + 1}/{n_epochs} step ={i + 1}/{n_itteration} loss = {loss.item()}")
+
+with torch.no_grad():
+    n_total = 0
+    n_true = 0
+    for image, target in test_loader:
+        n = len(image)
+        image = image.view(-1, 784)
+        # prediction
+        pred = model(image)
+        pred_target = torch.max(pred, 1)[1]
+        good_pred = torch.sum((target == pred_target))
+        n_total += n
+        n_true += good_pred
+    print("Accuracy : ", n_true / n_total)
